@@ -1,19 +1,8 @@
 package com.example.weather_rever
 
-import androidx.room.Embedded
-import androidx.room.Entity
-import androidx.room.PrimaryKey
 
-
-@Entity(tableName = "weather_data")
-data class WeatherDataEntity(
-    @PrimaryKey(autoGenerate = true)
-    val id: Long = 0, // It's good practice to have a primary key
-
-    @Embedded(prefix = "location_") // Prefix to avoid column name collisions
+data class WeatherData(
     val location: Location,
-
-    @Embedded(prefix = "current_") // Prefix to avoid column name collisions
     val current: Current
 )
 
@@ -34,7 +23,6 @@ data class Current(
     val temp_c: Double,
     val temp_f: Double,
     val is_day: Int,
-    @Embedded(prefix = "condition_")
     val condition: Condition,
     val wind_mph: Double,
     val wind_kph: Double,
@@ -69,7 +57,7 @@ data class Condition(
 
 
 
-fun getDummyWeatherData(): WeatherDataEntity {
+fun getDummyWeatherData(): WeatherData {
     val dummyLocation = Location(
         name = "London",
         region = "City of London, Greater London",
@@ -119,8 +107,7 @@ fun getDummyWeatherData(): WeatherDataEntity {
         gust_kph = 10.8
     )
 
-    return WeatherDataEntity(
-        id = 0,
+    return WeatherData(
         location = dummyLocation,
         current = dummyCurrent ,
 

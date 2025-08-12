@@ -11,23 +11,33 @@ class AppViewModel(private val weatherRepository: RoomRepository = Graph.weather
 
     // Room Database
     lateinit var _weatherRoomData : Flow<List<WeatherDataEntity>>
+
     init {
         viewModelScope.launch {
             _weatherRoomData = weatherRepository.getWeatherData()
         }
     }
 
-    fun addWeatherData(weatherData: WeatherDataEntity) {
+    fun addWeatherData(weatherData: WeatherData) {
         viewModelScope.launch {
-            weatherRepository.addWeatherData(weatherData)
+            val weatherDataEntity = apiDataToRoomData(weatherData)
+            weatherRepository.addWeatherData(weatherDataEntity)
         }
     }
 
-    fun updateWeatherData(weatherData: WeatherDataEntity) {
+    fun updateWeatherData(weatherData: WeatherData) {
         viewModelScope.launch {
-            weatherRepository.updateWeatherData(weatherData)
+            val weatherDataEntity = apiDataToRoomData(weatherData)
+            weatherRepository.updateWeatherData(weatherDataEntity)
         }
     }
+
+    fun clearWeatherData() {
+        viewModelScope.launch {
+            weatherRepository.clearWeatherData()
+        }
+    }
+
 
 
 
@@ -42,7 +52,7 @@ class AppViewModel(private val weatherRepository: RoomRepository = Graph.weather
     var responseState : State<ResponseState> = _responseState
     private var _locationData = mutableStateOf<LocationDataClass?>(null)
     var locationData : State<LocationDataClass?> = _locationData
-    private var key = "29fd0bb06fba4c26b6f73643250305"
+    private var key = "" // add your api key..
 
 
 
@@ -64,7 +74,8 @@ class AppViewModel(private val weatherRepository: RoomRepository = Graph.weather
                     data = respose ,
                     error = null
                 )
-                updateWeatherData(respose)
+                clearWeatherData()
+                addWeatherData(respose)
 
             }catch (e : Exception){
                 _responseState.value = _responseState.value.copy(
@@ -83,10 +94,113 @@ class AppViewModel(private val weatherRepository: RoomRepository = Graph.weather
 
     data class ResponseState(
         var loading : Boolean = true,
-        var data : WeatherDataEntity = getDummyWeatherData(),
+        var data : WeatherData = getDummyWeatherData(),
         var error : String? = null
     )
 
+
+
+    fun apiDataToRoomData(weatherData: WeatherData) : WeatherDataEntity{
+        return WeatherDataEntity(
+            location = Location_(
+                name = weatherData.location.name,
+                region = weatherData.location.region,
+                country = weatherData.location.country,
+                lat = weatherData.location.lat ,
+                lon = weatherData.location.lon ,
+                tz_id = weatherData.location.tz_id ,
+                localtime_epoch = weatherData.location.localtime_epoch ,
+                localtime = weatherData.location.localtime
+            ) ,
+            current = CurrentWeather(
+                last_updated_epoch = weatherData.current.last_updated_epoch,
+                last_updated = weatherData.current.last_updated,
+                temp_c = weatherData.current.temp_c,
+                temp_f = weatherData.current.temp_f,
+                is_day = weatherData.current.is_day,
+                condition = Condition_(
+                    text = weatherData.current.condition.text,
+                    icon = weatherData.current.condition.icon,
+                    code = weatherData.current.condition.code
+                ),
+                wind_mph = weatherData.current.wind_mph,
+                wind_kph = weatherData.current.wind_kph,
+                wind_degree = weatherData.current.wind_degree,
+                wind_dir = weatherData.current.wind_dir,
+                pressure_mb = weatherData.current.pressure_mb,
+                pressure_in = weatherData.current.pressure_in,
+                precip_mm = weatherData.current.precip_mm,
+                precip_in = weatherData.current.precip_in,
+                humidity = weatherData.current.humidity,
+                cloud = weatherData.current.cloud,
+                feelslike_c = weatherData.current.feelslike_c,
+                feelslike_f = weatherData.current.feelslike_f,
+                windchill_c = weatherData.current.windchill_c,
+                windchill_f = weatherData.current.windchill_f,
+                heatindex_c = weatherData.current.heatindex_c,
+                heatindex_f = weatherData.current.heatindex_f ,
+                dewpoint_c = weatherData.current.dewpoint_c,
+                dewpoint_f = weatherData.current.dewpoint_f,
+                vis_km = weatherData.current.vis_km,
+                vis_miles = weatherData.current.vis_miles ,
+                uv = weatherData.current.uv,
+                gust_mph = weatherData.current.gust_mph,
+                gust_kph = weatherData.current.gust_kph
+            )
+        )
+
+
+    }
+
+    fun roomDataToApiData(weatherData: WeatherDataEntity) : WeatherData{
+        return WeatherData(
+            location = Location(
+                name = weatherData.location.name,
+                region = weatherData.location.region,
+                country = weatherData.location.country,
+                lat = weatherData.location.lat,
+                lon = weatherData.location.lon,
+                tz_id = weatherData.location.tz_id,
+                localtime_epoch = weatherData.location.localtime_epoch,
+                localtime = weatherData.location.localtime
+            ) ,
+            current = Current(
+                last_updated_epoch = weatherData.current.last_updated_epoch,
+                last_updated = weatherData.current.last_updated,
+                temp_c = weatherData.current.temp_c,
+                temp_f = weatherData.current.temp_f,
+                is_day = weatherData.current.is_day,
+                condition = Condition(
+                    text = weatherData.current.condition.text,
+                    icon = weatherData.current.condition.icon,
+                    code = weatherData.current.condition.code
+                ),
+                wind_mph = weatherData.current.wind_mph,
+                wind_kph = weatherData.current.wind_kph,
+                wind_degree = weatherData.current.wind_degree,
+                wind_dir = weatherData.current.wind_dir ,
+                pressure_mb = weatherData.current.pressure_mb,
+                pressure_in = weatherData.current.pressure_in ,
+                precip_mm = weatherData.current.precip_mm,
+                precip_in = weatherData.current.precip_in,
+                humidity = weatherData.current.humidity,
+                cloud = weatherData.current.cloud,
+                feelslike_c = weatherData.current.feelslike_c,
+                feelslike_f = weatherData.current.feelslike_f,
+                windchill_c = weatherData.current.windchill_c,
+                windchill_f = weatherData.current.windchill_f,
+                heatindex_c = weatherData.current.heatindex_c,
+                heatindex_f = weatherData.current.heatindex_f,
+                dewpoint_c = weatherData.current.dewpoint_c,
+                dewpoint_f = weatherData.current.dewpoint_f,
+                vis_km = weatherData.current.vis_km,
+                vis_miles = weatherData.current.vis_miles,
+                uv = weatherData.current.uv,
+                gust_mph = weatherData.current.gust_mph,
+                gust_kph = weatherData.current.gust_kph
+            )
+        )
+    }
 
 
 

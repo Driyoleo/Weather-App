@@ -16,5 +16,13 @@ class RoomRepository (private val dao: WeatherDao) {
         return dao.getWeatherData()
     }
 
+    suspend fun clearWeatherData() {
+        dao.clearWeatherData()
+    }
+
+    fun getCount() : Flow<Int> {
+        return dao.getCount()
+    }
+
 
 }

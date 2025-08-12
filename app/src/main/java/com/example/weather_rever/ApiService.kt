@@ -15,6 +15,6 @@ val apiService = retrofit.create(ApiService::class.java)
 interface ApiService{
 
     @GET("current.json")
-    suspend fun getCurrentWeather(@Query("key") key: String, @Query("q") q: String , @Query("aqi") aqi: String = "no") : WeatherDataEntity
+    suspend fun getCurrentWeather(@Query("key") key: String, @Query("q") q: String , @Query("aqi") aqi: String = "no") : WeatherData
 
 }

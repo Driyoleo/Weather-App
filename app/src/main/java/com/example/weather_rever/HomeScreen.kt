@@ -108,7 +108,7 @@ fun HomeScreen(context: Context, modifier: Modifier = Modifier, innerpadding : P
         ){
             when{
                 viewModel.responseState.value.loading->{
-                    if (roomData == emptyList<WeatherDataEntity>()){
+                    if (roomData.value.isEmpty()){
                         Column(
                             modifier = Modifier.fillMaxSize() ,
                             verticalArrangement = Arrangement.Center ,

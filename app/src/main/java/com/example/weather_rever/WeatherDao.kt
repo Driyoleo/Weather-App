@@ -18,4 +18,12 @@ abstract class WeatherDao{
 
     @Query("SELECT * FROM weather_data")
     abstract fun getWeatherData() : Flow<List<WeatherDataEntity>>
+
+    // query to clear all data from databse
+    @Query("DELETE FROM weather_data")
+    abstract suspend fun clearWeatherData()
+
+    @Query("SELECT COUNT(*) FROM weather_data")
+    abstract fun getCount() : Flow<Int>
+
 }
