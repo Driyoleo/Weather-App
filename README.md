@@ -26,7 +26,11 @@ app/
  ├── ui/           # Activities, Fragments, and ViewModels
  ├── utils/        # Helper classes and constants
 ```
+## 🖼 Screenshots
 
+| ![Reference](screenshots/ref.jpg) |
+
+---
 ## 🚀 Setup Instructions
 1. **Clone the repository**
    ```bash
