@@ -52,7 +52,7 @@ class AppViewModel(private val weatherRepository: RoomRepository = Graph.weather
     var responseState : State<ResponseState> = _responseState
     private var _locationData = mutableStateOf<LocationDataClass?>(null)
     var locationData : State<LocationDataClass?> = _locationData
-    private var key = "" // add your api key..
+    private var key = ""
 
 
 
